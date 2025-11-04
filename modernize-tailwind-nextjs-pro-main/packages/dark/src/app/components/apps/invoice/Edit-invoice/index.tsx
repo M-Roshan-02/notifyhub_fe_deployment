@@ -19,7 +19,20 @@ const EditReminderPage = ({ reminderId }: { reminderId: string }) => {
       if (!reminderId) return;
       try {
         const fetchedReminder = await reminderService.getReminderById(reminderId);
-        setReminder(fetchedReminder);
+        setReminder({
+          ...fetchedReminder,
+          title: fetchedReminder.title || "",
+          description: fetchedReminder.description || "",
+          senderName: fetchedReminder.senderName || "",
+          senderEmail: fetchedReminder.senderEmail || "",
+          receiverEmail: fetchedReminder.receiverEmail || "",
+          intervalType: fetchedReminder.intervalType || "Daily",
+          reminderStartDate: fetchedReminder.reminderStartDate || "",
+          reminderEndDate: fetchedReminder.reminderEndDate || "",
+          phoneNo: fetchedReminder.phoneNo || "",
+          active: fetchedReminder.active || false,
+          completed: fetchedReminder.completed || false,
+        });
       } catch (err) {
         setError("Failed to fetch reminder data.");
       }
@@ -30,7 +43,6 @@ const EditReminderPage = ({ reminderId }: { reminderId: string }) => {
   const handleSave = async () => {
     if (!reminder) return;
     try {
-      // Construct UpdateReminderInput from reminder state
       const updateInput = {
         id: reminder.id,
         title: reminder.title,
@@ -55,7 +67,6 @@ const EditReminderPage = ({ reminderId }: { reminderId: string }) => {
   };
 
   const handleCancel = () => {
-    // A better implementation would re-fetch the original data
     setEditing(false);
   };
 

@@ -1,21 +1,23 @@
 'use client'
 import React, { createContext, useState, useEffect } from 'react';
 import { PostType, profiledataType } from '@/app/(DashboardLayout)/types/apps/userProfile';
-import { userService, departmentService } from '@/app/services/api';
+import { Reminder } from '@/app/(DashboardLayout)/types/apps/reminder';
+import { userService, departmentService, reminderService } from '@/app/services/api';
 
 export type UserDataContextType = {
     posts: PostType[];
-    user: any; // Changed from users: any[]
+    users: any[];
     gallery: any[];
-    // followers: any[]; // Removed
     departments: any[];
+    reminders: Reminder[];
     profileData: profiledataType;
     loading: boolean;
     error: null | any;
-    // followerSearch: string; // Removed
+    userSearch: string;
     departmentSearch: string;
-    // setFollowerSearch: React.Dispatch<React.SetStateAction<string>>; // Removed
+    setUserSearch: React.Dispatch<React.SetStateAction<string>>;
     setDepartmentSearch: React.Dispatch<React.SetStateAction<string>>;
+    setReminders: React.Dispatch<React.SetStateAction<Reminder[]>>;
     addGalleryItem: (item: any) => void;
     addReply: (postId: number, commentId: number, reply: string) => void;
     likePost: (postId: number) => void;
@@ -29,22 +31,22 @@ export const UserDataContext = createContext<UserDataContextType | undefined>(un
 
 const config = {
     posts: [], 
-    users: [], // Still here for config, but not used for state
+    users: [],
     gallery: [],
-    followers: [], // Still here for config, but not used for state
     departments: [],
-    followerSearch: '',
+    reminders: [],
+    userSearch: '',
     departmentSearch: '',
     loading: true,
 };
 
 export const UserDataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [posts, setPosts] = useState<PostType[]>(config.posts);
-    const [user, setUser] = useState<any>(null); // Changed from users
+    const [users, setUsers] = useState<any[]>(config.users);
     const [gallery, setGallery] = useState<any[]>(config.gallery);
-    // const [followers, setFollowers] = useState<any[]>(config.followers); // Removed
     const [departments, setDepartments] = useState<any[]>(config.departments);
-    // const [followerSearch, setFollowerSearch] = useState<string>(config.followerSearch); // Removed
+    const [reminders, setReminders] = useState<Reminder[]>(config.reminders);
+    const [userSearch, setUserSearch] = useState<string>(config.userSearch);
     const [departmentSearch, setDepartmentSearch] = useState<string>(config.departmentSearch);
     const [error, setError] = useState<any>(null);
     const [loading, setLoading] = useState<boolean>(config.loading);
@@ -63,11 +65,25 @@ export const UserDataProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         const fetchData = async () => {
             try {
                 setLoading(true)
-                const userResponse = await userService.getMe(); // Changed from usersResponse
+                const usersResponse = await userService.getUsers();
                 const deptsResponse = await departmentService.getDepartments();
-                setUser(userResponse); // Changed from setUsers(usersResponse.data)
-                // setFollowers(usersResponse.data); // Removed
+                const remindersResponse = await reminderService.getReminders();
+                setUsers(usersResponse);
                 setDepartments(deptsResponse);
+                setReminders(remindersResponse.map((reminder: any) => ({
+                  ...reminder,
+                  title: reminder.title || "",
+                  description: reminder.description || "",
+                  senderName: reminder.senderName || "",
+                  senderEmail: reminder.senderEmail || "",
+                  receiverEmail: reminder.receiverEmail || "",
+                  intervalType: reminder.intervalType || "Daily",
+                  reminderStartDate: reminder.reminderStartDate || "",
+                  reminderEndDate: reminder.reminderEndDate || "",
+                  phoneNo: reminder.phoneNo || "",
+                  active: reminder.active || false,
+                  completed: reminder.completed || false,
+                })));
             } catch (err) {
                 setError(err);
             } finally {
@@ -78,21 +94,21 @@ export const UserDataProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }, []);
 
     
-    // const filterFollowers = () => { // Removed
-    //     if (followers) {
-    //         return followers.filter((t) =>
-    //             t.name.toLowerCase().includes(followerSearch.toLowerCase())
-    //         );
-    //     }
-    //     return followers;
-    // };
+    const filterUsers = () => {
+        if (users) {
+            return users.filter((t) =>
+                t.username.toLowerCase().includes(userSearch.toLowerCase())
+            );
+        }
+        return users;
+    };
     
    
 const filterDepartments = () => {
     if (departments && departmentSearch) {
         return departments.filter((t) =>
             (typeof t.name === 'string' && t.name.toLowerCase().includes(departmentSearch.toLowerCase())) 
-        ); // Changed t.title to t.name
+        );
     }
     return departments;
 };
@@ -101,10 +117,10 @@ const filterDepartments = () => {
         <UserDataContext.Provider
             value={{
                 posts,
-                user,
+                users: filterUsers(),
                 gallery,
-                followers: [], // Provided an empty array for followers
                 departments: filterDepartments(),
+                reminders,
                 profileData,
                 loading,
                 error,
@@ -115,10 +131,11 @@ const filterDepartments = () => {
                 likeReply: () => {},
                 toggleFollow: () => {},
                 toggleDepartmentStatus: () => {},
-                // setFollowerSearch, // Removed
-                // followerSearch, // Removed
+                setUserSearch,
+                userSearch,
                 setDepartmentSearch,
                 departmentSearch,
+                setReminders,
             }}
         >
             {children}

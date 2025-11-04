@@ -3,10 +3,10 @@ import { gql } from '@apollo/client';
 import { Reminder, UpdateReminderInput } from "@/app/(DashboardLayout)/types/apps/reminder";
 
 export const userService = {
-  async getMe() {
+  async getUsers() {
     const query = gql`
-      query Me {
-        me {
+      query Users {
+        users {
           id
           username
           email
@@ -18,7 +18,7 @@ export const userService = {
       }
     `;
     const result = await client.query({ query });
-    return result.data.me;
+    return result.data.users;
   },
 
   async createUser(userData: { name: string; username: string; email: string }) {
@@ -26,7 +26,6 @@ export const userService = {
       mutation CreateUser($name: String!, $username: String!, $email: String!) {
         createUser(input: { name: $name, username: $username, email: $email }) {
           id
-          name
           username
           email
         }
@@ -64,14 +63,16 @@ export const departmentService = {
 
   async createDepartment(deptData: { userId: string; title: string; body: string }) {
     const mutation = gql`
-      mutation CreateDepartment($userId: ID!, $title: String!, $body: String!) {
-        createPost(input: { userId: $userId, title: $title, body: $body }) {
-          id
-          title
-          body
-          user {
+      mutation CreateDepartment($name: String!) {
+        createDepartment(name: $name) {
+          ok
+          department {
             id
             name
+            company {
+              id
+              name
+            }
           }
         }
       }
@@ -79,12 +80,10 @@ export const departmentService = {
     const result = await client.mutate({
       mutation,
       variables: {
-        userId: deptData.userId,
-        title: deptData.title,
-        body: deptData.body,
+        name: deptData.title, // Assuming title maps to name for department
       },
     });
-    return result.data.createPost;
+    return result.data.createDepartment.department;
   },
 };
 
@@ -96,9 +95,15 @@ export const reminderService = {
           id
           title
           description
+          senderName
+          senderEmail
+          receiverEmail
+          intervalType
           reminderStartDate
           reminderEndDate
+          phoneNo
           active
+          completed
         }
       }
     `;
@@ -114,11 +119,14 @@ export const reminderService = {
           title
           description
           senderEmail
+          senderName
           receiverEmail
           intervalType
           reminderStartDate
           reminderEndDate
+          phoneNo
           active
+          completed
         }
       }
     `;

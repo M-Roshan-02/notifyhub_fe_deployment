@@ -5,19 +5,19 @@ import Link from "next/link";
 import CardBox from "@/app/components/shared/CardBox";
 import { UserDataContext } from "@/app/context/UserDataContext/index";
 
-interface Department {
+interface User {
     id: React.Key | null | undefined;
-    name: string;
+    username: string;
 }
 
-const EditDepartmentModal = ({
+const EditUserModal = ({
     isVisible,
     onClose,
-    department
+    user
 }: {
     isVisible: boolean,
     onClose: () => void,
-    department: Department | null
+    user: User | null
 }) => {
   
  
@@ -30,13 +30,13 @@ const EditDepartmentModal = ({
 
   
   useEffect(() => {
-    if (department) {
+    if (user) {
       
       setFormData({
-        name: department.name || '',
+        name: user.username || '',
       });
     }
-  }, [department]);
+  }, [user]);
 
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,40 +46,40 @@ const EditDepartmentModal = ({
 
   
   const handleSave = async () => {
-    if (!department || !department.id) return;
+    if (!user || !user.id) return;
     setIsSaving(true);
 
     try {
       
-      console.log(`[API MOCK] Attempting to update department ID: ${department.id} with name: ${formData.name}`); 
+      console.log(`[API MOCK] Attempting to update user ID: ${user.id} with name: ${formData.name}`); 
       
       
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       
-      console.log("[API MOCK] Department update successful!");
+      console.log("[API MOCK] User update successful!");
       
       
       onClose();
     } catch (err) {
-      console.error("Department Save Error:", err);
+      console.error("User Save Error:", err);
     } finally {
       setIsSaving(false);
     }
   };
 
 
-  if (!department) return null;
+  if (!user) return null;
 
   return (
     <Modal show={isVisible} onClose={onClose}>
-      <Modal.Header>Edit {department.name}</Modal.Header>
+      <Modal.Header>Edit {user.username}</Modal.Header>
       <Modal.Body>
         <div className="space-y-4">
           
          
           <div>
-            <Label htmlFor="name" value="Department Name" className="mb-2 block"/> 
+            <Label htmlFor="name" value="User Name" className="mb-2 block"/> 
             <TextInput
               id="name"
               name="name"
@@ -94,7 +94,7 @@ const EditDepartmentModal = ({
       <Modal.Footer>
         <Button
           onClick={handleSave}
-          disabled={isSaving || formData.name.trim() === department.name.trim()} 
+          disabled={isSaving || formData.name.trim() === user.username.trim()} 
         >
           {isSaving ? 'Saving...' : 'Save Changes'}
         </Button>
@@ -106,28 +106,33 @@ const EditDepartmentModal = ({
   );
 };
 
-const FollowerCard = () => {
-  const { departments, setDepartmentSearch }: any = useContext(UserDataContext);
+const UsersCard = () => {
+  const { users, setUserSearch }: any = useContext(UserDataContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentDepartment, setCurrentDepartment] = useState<Department | null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
 
-  const openEditModal = (department: Department) => {
-    setCurrentDepartment(department);
+  const openEditModal = (user: User) => {
+    setCurrentUser(user);
     setIsModalOpen(true);
   };
 
   const closeEditModal = () => {
     setIsModalOpen(false);
-    setCurrentDepartment(null); 
+    setCurrentUser(null); 
   };
+
+  useEffect(() => {
+    console.log('Users in UsersCard:', users);
+  }, [users]);
+
   
   return (
     <>
       <div className="md:flex justify-between mb-6">
         <h5 className="text-2xl flex gap-3 items-center sm:my-0 my-4">
-          Departments
+          Users
           <Badge color={"secondary"} className="rounded-md">
-            {departments.length}
+            {users.length}
           </Badge>
         </h5>
         <div className="flex gap-3">
@@ -136,40 +141,40 @@ const FollowerCard = () => {
             type="text"
             sizing="md"
             className="form-control"
-            placeholder="Search Departments"
-            onChange={(e) => setDepartmentSearch(e.target.value)}
+            placeholder="Search Users"
+            onChange={(e) => setUserSearch(e.target.value)}
           />
-          <Link href="/apps/user-profile/departments/create">
-            <Button color="primary">Add Department</Button>
+          <Link href="/apps/user-profile/users/create">
+            <Button color="primary">Add User</Button>
           </Link>
         </div>
       </div>
 
       <div className="grid grid-cols-12 gap-6">
-        {departments.map(
-          (department: Department) => (
+        {users.map(
+          (user: User) => (
             <div
               className="lg:col-span-4 md:col-span-6 sm:col-span-6 col-span-12"
-              key={department.id}
+              key={user.id}
             >
               <CardBox>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="flex items-center justify-center w-12 h-12 bg-lightprimary rounded-full">
                       <Icon
-                        icon="tabler:building"
+                        icon="tabler:user-circle"
                         height="24"
                         className="text-primary"
                       />
                     </div>
-                    <h6 className="text-base font-medium">{department.name}</h6> 
+                    <h6 className="text-base font-medium">{user.username}</h6> 
                   </div>
 
                   
                   <Button
                     color="light"
                     size="xs"
-                    onClick={() => openEditModal(department)}
+                    onClick={() => openEditModal(user)}
                   >
                     <Icon icon="tabler:edit" height="16" />
                   </Button>
@@ -181,13 +186,13 @@ const FollowerCard = () => {
       </div>
 
       
-      <EditDepartmentModal
+      <EditUserModal
         isVisible={isModalOpen}
         onClose={closeEditModal}
-        department={currentDepartment}
+        user={currentUser}
       />
     </>
   );
 };
 
-export default FollowerCard;
+export default UsersCard;

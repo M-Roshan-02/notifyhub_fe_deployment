@@ -199,8 +199,8 @@ const SidebarContent: MenuItem[] = [
           },
           {
             id: uniqueId(),
-            name: "Friends",
-            url: "/apps/user-profile/friends",
+            name: "Users",
+            url: "/apps/user-profile/users",
           },
           {
             id: uniqueId(),

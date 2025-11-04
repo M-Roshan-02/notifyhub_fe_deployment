@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 import { Alert, Button, Label, Select, TextInput } from "flowbite-react";
 import { useRouter } from "next/navigation";
-import { reminderService } from "@/services/api";
-import { Reminder } from "@/types/apps/invoice";
+import { reminderService } from "@/app/services/api";
+import { Reminder } from "@/app/(DashboardLayout)/types/apps/reminder";
 
 const CreateReminderPage = () => {
   const router = useRouter();
@@ -17,10 +17,12 @@ const CreateReminderPage = () => {
     senderEmail: "",
     receiverEmail: "",
     intervalType: "Daily",
-    sendReminderAt: "",
     reminderEndDate: "",
-    status: "Pending",
-    userId: "1", // Assuming a default user for now
+    active: true,
+    reminderStartDate: "",
+    phoneNo: "",
+    // status: "Pending", // status is not part of the Reminder type
+    // userId: "1", // userId is not part of the Reminder type
   });
 
   const handleChange = (field: keyof typeof formData, value: any) => {
@@ -78,12 +80,16 @@ const CreateReminderPage = () => {
               </Select>
             </div>
             <div className="lg:col-span-6 col-span-12">
-              <Label htmlFor="sendReminderAt">Send Reminder At</Label>
-              <TextInput id="sendReminderAt" type="time" value={formData.sendReminderAt} onChange={(e) => handleChange('sendReminderAt', e.target.value)} required />
-            </div>
-            <div className="lg:col-span-6 col-span-12">
               <Label htmlFor="reminderEndDate">Reminder End Date</Label>
               <TextInput id="reminderEndDate" type="date" value={formData.reminderEndDate} onChange={(e) => handleChange('reminderEndDate', e.target.value)} required />
+            </div>
+            <div className="lg:col-span-6 col-span-12">
+              <Label htmlFor="reminderStartDate">Reminder Start Date</Label>
+              <TextInput id="reminderStartDate" type="date" value={formData.reminderStartDate} onChange={(e) => handleChange('reminderStartDate', e.target.value)} required />
+            </div>
+            <div className="lg:col-span-6 col-span-12">
+              <Label htmlFor="phoneNo">Phone Number</Label>
+              <TextInput id="phoneNo" value={formData.phoneNo} onChange={(e) => handleChange('phoneNo', e.target.value)} required />
             </div>
           </div>
         </div>

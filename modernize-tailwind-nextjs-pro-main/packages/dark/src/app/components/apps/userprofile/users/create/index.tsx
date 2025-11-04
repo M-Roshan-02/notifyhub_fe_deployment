@@ -33,7 +33,7 @@ const CreateUserApp = () => {
         username: formData.username,
         email: formData.email,
       });
-      router.push("/apps/user-profile/friends");
+      router.push("/apps/user-profile/users");
     } catch (err: any) {
       setError(err.message);
     } finally {

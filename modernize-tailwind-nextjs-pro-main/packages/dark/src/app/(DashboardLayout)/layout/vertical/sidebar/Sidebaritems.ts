@@ -79,7 +79,7 @@ const SidebarContent: MenuItem[] = [
           {
             id: uniqueId(),
             name: "Users",
-            url: "/apps/user-profile/friends",
+            url: "/apps/user-profile/users",
           },
         ],
       },

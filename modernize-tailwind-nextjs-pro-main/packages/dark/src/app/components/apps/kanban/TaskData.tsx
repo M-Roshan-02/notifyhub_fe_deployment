@@ -6,7 +6,7 @@ import EditTaskModal from "./TaskModal/EditTaskModal";
 import { KanbanDataContext } from "@/app/context/kanbancontext/index";
 import { Draggable } from "@hello-pangea/dnd";
 import { Badge, Dropdown } from "flowbite-react";
-import { patchFetcher, putFetcher } from "@/app/api/globalFetcher";
+import { putFetcher } from "@/app/api/globalFetcher";
 import { mutate } from "swr";
 interface TaskDataProps {
   task: { id: any };
@@ -36,7 +36,7 @@ const TaskData: React.FC<TaskDataProps> = ({
 
   const handleSaveEditedTask = async (editedTaskData: { id: any }) => {
     try {
-      const response = await mutate('/api/kanban',patchFetcher("/api/kanban/edit-task", {
+      const response = await mutate('/api/kanban',putFetcher("/api/kanban/edit-task", {
         taskId: editedTaskData.id,
         newData: editedTaskData,
       }),false);

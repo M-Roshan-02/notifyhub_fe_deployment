@@ -263,7 +263,7 @@ export const CryptoPrices = () => {
                                 <p className="text-[13px] my-4 text-wrap">Get started on BingX today and access a range of services, including spot trading, derivatives, copy trading, and more.</p>
                                 <Button color={"primary"} >Sign Up Now!</Button>
                                 <div className="flex items-center mt-2 gap-2">
-                                  <Image src={coingecko} alt="coin" />
+                                  
                                   <p className="text-[13px] font-semibold">Sponsored</p>
                                 </div>
                               </div>

@@ -7,7 +7,8 @@ import CardBox from "@/app/components/shared/CardBox";
 import { UserDataContext } from "@/app/context/UserDataContext/index"; // Import global UserDataContext
 
 const ProfileSection = () => {
-  const { user, loading, error } = useContext(UserDataContext); // Consume global user
+  const { users, loading, error } = useContext(UserDataContext); // Consume global users array
+  const user = users && users.length > 0 ? users[0] : null; // Get the first user from the array
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: user?.username || "", // Use user data
@@ -43,7 +44,7 @@ const ProfileSection = () => {
 
   if (loading) return <div>Loading user profile...</div>;
   if (error) return <div>Error loading user profile: {error.message}</div>;
-  if (!user) return <div>No user data available.</div>;
+  if (!users || users.length === 0) return <div>No user data available.</div>; // Check for empty users array
 
   return (
     <CardBox className="bg-gray-800 text-gray-200 rounded-xl p-6 shadow-md border border-gray-700">

@@ -11,7 +11,7 @@ const BCrumb = [
     title: "Home",
   },
   {
-    to: "/apps/user-profile/friends",
+    to: "/apps/user-profile/users",
     title: "Users",
   },
   {

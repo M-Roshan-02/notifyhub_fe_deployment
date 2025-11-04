@@ -1,10 +1,10 @@
 "use client"
-import FriendsCard from '@/app/components/apps/userprofile/friends/FriendsCard';
+import UsersCard from '@/app/components/apps/userprofile/users/UsersCard';
 import ProfileBanner from '@/app/components/apps/userprofile/profile/ProfileBanner'
 import React from 'react'
 import { UserDataProvider } from '@/app/context/UserDataContext/index';
 
-const FriendsApp = () => {
+const UsersApp = () => {
   return (
     <>
       <UserDataProvider>
@@ -13,9 +13,9 @@ const FriendsApp = () => {
           <div className="col-span-12">
             <ProfileBanner />
           </div>
-          {/* FriendsCard */}
+          {/* UsersCard */}
           <div className="col-span-12">
-            <FriendsCard />
+            <UsersCard />
           </div>
         </div>
       </UserDataProvider>
@@ -23,4 +23,4 @@ const FriendsApp = () => {
   )
 }
 
-export default FriendsApp
+export default UsersApp

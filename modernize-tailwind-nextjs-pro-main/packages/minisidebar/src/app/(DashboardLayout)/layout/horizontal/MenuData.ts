@@ -178,8 +178,8 @@ const Menuitems = [
           },
           {
             id: uniqueId(),
-            title: "Friends",
-            href: "/apps/user-profile/friends",
+            title: "Users",
+            href: "/apps/user-profile/users",
           },
           {
             id: uniqueId(),
