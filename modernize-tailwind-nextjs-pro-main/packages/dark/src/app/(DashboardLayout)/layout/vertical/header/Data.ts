@@ -196,11 +196,13 @@ const profileDD: ProfileType[] = [
   {
     img: inboxIcon,
     title: "Department Management",
+    subtitle: "Manage departments",
     url: "/apps/user-profile/followers",
   },
   {
     img: taskIcon,
     title: "User Management",
+    subtitle: "Manage users",
     url: "/apps/user-profile/friends",
   },
 ];

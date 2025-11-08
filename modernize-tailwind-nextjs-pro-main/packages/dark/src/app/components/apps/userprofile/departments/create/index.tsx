@@ -54,7 +54,7 @@ const CreateDepartmentApp = () => {
               required
             />
           </div>
-          {error && <p className="text-red-500">{error.message}</p>}
+          {error && <p className="text-red-500">{error}</p>}
           <Button type="submit" disabled={loading}>
             {loading ? "Creating..." : "Create Department"}
           </Button>

@@ -8,6 +8,7 @@ export interface Reminder {
   intervalType: string;
   reminderStartDate: string;
   reminderEndDate: string;
+  sendReminderAt: string;
   phoneNo: string;
   active: boolean;
   completed: boolean;
@@ -23,6 +24,7 @@ export interface UpdateReminderInput {
   intervalType?: string;
   reminderStartDate?: string;
   reminderEndDate?: string;
+  sendReminderAt?: string;
   phoneNo?: string;
   active?: boolean;
   completed?: boolean;

@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const EditUserPage = ({ params }) => {
+const EditUserPage = ({ params }: { params: { id: string } }) => {
   const userId = params.id;
   
   

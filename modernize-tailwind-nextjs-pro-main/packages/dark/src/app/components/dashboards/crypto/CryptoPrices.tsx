@@ -12,7 +12,7 @@ import xrp from "/public/images/crypto/xrp-symbol-white-128.webp"
 import { Icon } from "@iconify/react/dist/iconify.js";
 import xIcon from "/public/images/crypto/x-icon.png"
 import bingIcon from "/public/images/crypto/bingx.png"
-import coingecko from "/public/images/crypto/gecko-65456030ba03df0f83f96e18d0c8449485c1a61dbdeeb733ca69164982489d0e.svg"
+import coingecko from "/public/images/crypto/gecko.svg"
 import dynamic from "next/dynamic";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 

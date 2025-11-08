@@ -21,6 +21,9 @@ const CreateReminderPage = () => {
     reminderEndDate: "",
     status: "Pending",
     userId: "1", // Assuming a default user for now
+    active: true,
+    reminderStartDate: "",
+    phoneNo: "",
   });
 
   const handleChange = (field: keyof typeof formData, value: any) => {
