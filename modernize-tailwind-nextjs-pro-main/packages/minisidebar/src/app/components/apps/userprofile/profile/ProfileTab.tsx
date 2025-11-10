@@ -17,9 +17,9 @@ const ProfileTab = () => {
       to: "/apps/user-profile/followers",
     },
     {
-      label: "Users",
+      label: "Friends",
       icon: "tabler:user-circle",
-      to: "/apps/user-profile/users",
+      to: "/apps/user-profile/friends",
     },
     {
       label: "Gallery",

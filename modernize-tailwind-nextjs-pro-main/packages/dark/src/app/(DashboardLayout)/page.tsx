@@ -11,7 +11,7 @@ import { Projects } from "../components/dashboards/modern/Projects";
 import { Social } from "../components/dashboards/modern/Social";
 import { SellingProducts } from "../components/dashboards/modern/SellingProducts";
 import { WeeklyStats } from "../components/dashboards/modern/WeeklyStats";
-import { TopPerformer } from "../components/dashboards/modern/TopPerformer";
+import { ReminderList } from "../components/dashboards/modern/ReminderList";
 
 const page = () => {
   return (
@@ -48,7 +48,7 @@ const page = () => {
           <WeeklyStats/>
         </div>
         <div className="lg:col-span-8 col-span-12">
-          <TopPerformer/>
+          <ReminderList/>
         </div>
       </div>
      

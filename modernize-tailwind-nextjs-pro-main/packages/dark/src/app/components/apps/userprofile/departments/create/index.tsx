@@ -3,7 +3,7 @@
 import React, { useState } from "react"; 
 import { useRouter } from "next/navigation";
 import { Button, TextInput, Card, Label, Textarea } from "flowbite-react";
-import { departmentService } from "@/app/services/api";
+import { departmentService } from "@/services/api";
 
 const CreateDepartmentApp = () => {
   const router = useRouter();
@@ -54,7 +54,7 @@ const CreateDepartmentApp = () => {
               required
             />
           </div>
-          {error && <p className="text-red-500">{error.message}</p>}
+          {error && <p className="text-red-500">{error}</p>}
           <Button type="submit" disabled={loading}>
             {loading ? "Creating..." : "Create Department"}
           </Button>

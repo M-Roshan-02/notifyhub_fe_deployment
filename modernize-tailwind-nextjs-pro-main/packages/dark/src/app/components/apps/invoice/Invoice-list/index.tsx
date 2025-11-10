@@ -4,7 +4,7 @@ import { Checkbox, Table, TextInput, Button, Modal, Badge, Tooltip, Alert, Spinn
 import Link from "next/link";
 import { Icon } from "@iconify/react";
 import { reminderService } from "@/services/api";
-import { Reminder } from "@/app/(DashboardLayout)/types/apps/reminder";
+import { Reminder } from "@/types/apps/invoice";
 
 function ReminderList() {
   const [reminders, setReminders] = useState<Reminder[]>([]);

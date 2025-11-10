@@ -7,8 +7,13 @@ import CardBox from "@/app/components/shared/CardBox";
 import { UserDataContext } from "@/app/context/UserDataContext/index"; // Import global UserDataContext
 
 const ProfileSection = () => {
-  const { users, loading, error } = useContext(UserDataContext); // Consume global users array
-  const user = users && users.length > 0 ? users[0] : null; // Get the first user from the array
+  const context = useContext(UserDataContext); // Consume global user
+
+  if (!context) {
+    return <div>Error: User data context not available.</div>;
+  }
+
+  const { user, loading, error } = context;
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: user?.username || "", // Use user data
@@ -27,13 +32,13 @@ const ProfileSection = () => {
     }
   }, [user]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     setIsSaved(false);
   };
 
-  const handleSave = (e) => {
+  const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     // In a real application, you would call an API to update the user data
     // For now, we just update the local state (which is not persisted)
@@ -44,7 +49,7 @@ const ProfileSection = () => {
 
   if (loading) return <div>Loading user profile...</div>;
   if (error) return <div>Error loading user profile: {error.message}</div>;
-  if (!users || users.length === 0) return <div>No user data available.</div>; // Check for empty users array
+  if (!user) return <div>No user data available.</div>;
 
   return (
     <CardBox className="bg-gray-800 text-gray-200 rounded-xl p-6 shadow-md border border-gray-700">

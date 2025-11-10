@@ -1,6 +1,6 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react"; // 👈 Added useState, useEffect
 import { Icon } from "@iconify/react";
-import { Badge, Button, TextInput, Modal, Label } from "flowbite-react";
+import { Badge, Button, TextInput, Modal, Label } from "flowbite-react"; // 👈 Added Modal, Label
 import Link from "next/link";
 import CardBox from "@/app/components/shared/CardBox";
 import { UserDataContext } from "@/app/context/UserDataContext/index";
@@ -22,7 +22,7 @@ const EditDepartmentModal = ({
   
  
   const [formData, setFormData] = useState({
-    name: '',
+    name: '', 
   });
 
   
@@ -33,7 +33,7 @@ const EditDepartmentModal = ({
     if (department) {
       
       setFormData({
-        name: department.name || '',
+        name: department.name || '', 
       });
     }
   }, [department]);
@@ -108,6 +108,8 @@ const EditDepartmentModal = ({
 
 const FollowerCard = () => {
   const { departments, setDepartmentSearch }: any = useContext(UserDataContext);
+
+  // State for Modal Management
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentDepartment, setCurrentDepartment] = useState<Department | null>(null);
 
@@ -118,7 +120,7 @@ const FollowerCard = () => {
 
   const closeEditModal = () => {
     setIsModalOpen(false);
-    setCurrentDepartment(null); 
+    setCurrentDepartment(null);
   };
   
   return (

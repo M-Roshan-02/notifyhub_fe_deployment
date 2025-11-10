@@ -2,14 +2,16 @@ export interface Reminder {
   id: string;
   title: string;
   description?: string;
-  senderEmail: string;
+  senderEmail?: string;
   senderName?: string;
-  receiverEmail: string;
+  receiverEmail?: string;
   intervalType?: string;
-  reminderStartDate?: string; // DateTime
-  reminderEndDate?: string; // DateTime
+  reminderStartDate: string;
+  reminderEndDate: string;
+  sendReminderAt?: string;
   phoneNo?: string;
-  active?: boolean;
+  active: boolean;
   completed?: boolean;
+  status?: string;
   userId?: string; // Assuming userId is needed for create, but not returned by queries
 }

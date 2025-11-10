@@ -5,14 +5,10 @@ import Link from "next/link";
 import { Badge, Button } from "flowbite-react";
 import { format, isValid, parseISO } from "date-fns";
 import FullLogo from "@/app/(DashboardLayout)/layout/shared/logo/FullLogo";
-import { UserDataContext } from "@/app/context/UserDataContext";
+import { ReminderContext } from "@/app/context/ReminderContext";
 
 const ReminderDetail = () => {
-  const context = useContext(UserDataContext);
-  if (!context) {
-    throw new Error("ReminderDetail must be used within a UserDataProvider");
-  }
-  const { reminders } = context;
+  const { reminders } = useContext(ReminderContext);
   const [selectedReminder, setSelectedReminder]: any = useState(null);
 
   const pathName = usePathname();

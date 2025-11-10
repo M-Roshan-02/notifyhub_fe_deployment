@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Alert, Button, Label, Select, TextInput, Checkbox } from "flowbite-react";
 import { useRouter } from "next/navigation";
 import { reminderService } from "@/services/api";
-import { Reminder } from "@/app/(DashboardLayout)/types/apps/reminder";
+import { Reminder } from "@/types/apps/invoice";
 import { format } from "date-fns";
 
 const EditReminderPage = ({ reminderId }: { reminderId: string }) => {
@@ -19,20 +19,7 @@ const EditReminderPage = ({ reminderId }: { reminderId: string }) => {
       if (!reminderId) return;
       try {
         const fetchedReminder = await reminderService.getReminderById(reminderId);
-        setReminder({
-          ...fetchedReminder,
-          title: fetchedReminder.title || "",
-          description: fetchedReminder.description || "",
-          senderName: fetchedReminder.senderName || "",
-          senderEmail: fetchedReminder.senderEmail || "",
-          receiverEmail: fetchedReminder.receiverEmail || "",
-          intervalType: fetchedReminder.intervalType || "Daily",
-          reminderStartDate: fetchedReminder.reminderStartDate || "",
-          reminderEndDate: fetchedReminder.reminderEndDate || "",
-          phoneNo: fetchedReminder.phoneNo || "",
-          active: fetchedReminder.active || false,
-          completed: fetchedReminder.completed || false,
-        });
+        setReminder(fetchedReminder);
       } catch (err) {
         setError("Failed to fetch reminder data.");
       }
@@ -43,6 +30,7 @@ const EditReminderPage = ({ reminderId }: { reminderId: string }) => {
   const handleSave = async () => {
     if (!reminder) return;
     try {
+      // Construct UpdateReminderInput from reminder state
       const updateInput = {
         id: reminder.id,
         title: reminder.title,
@@ -67,6 +55,7 @@ const EditReminderPage = ({ reminderId }: { reminderId: string }) => {
   };
 
   const handleCancel = () => {
+    // A better implementation would re-fetch the original data
     setEditing(false);
   };
 

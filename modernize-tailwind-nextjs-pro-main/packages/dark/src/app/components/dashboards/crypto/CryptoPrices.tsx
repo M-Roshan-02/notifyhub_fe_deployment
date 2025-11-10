@@ -2,17 +2,7 @@
 import { Badge, Button, Popover, Select, Table } from "flowbite-react"
 import CardBox from "../../shared/CardBox"
 import Image from "next/image";
-import bitcoin from "/public/images/svgs/icon-bitcoin.svg"
-import etherium from "/public/images/crypto/ethereum-coin.webp"
-import tether from "/public/images/crypto/Tether.webp"
-import bnb from "/public/images/crypto/bnb-icon2_2x.webp"
-import solana from "/public/images/crypto/solana.webp"
-import usdc from "/public/images/crypto/usdc.webp"
-import xrp from "/public/images/crypto/xrp-symbol-white-128.webp"
 import { Icon } from "@iconify/react/dist/iconify.js";
-import xIcon from "/public/images/crypto/x-icon.png"
-import bingIcon from "/public/images/crypto/bingx.png"
-import coingecko from "/public/images/crypto/gecko-65456030ba03df0f83f96e18d0c8449485c1a61dbdeeb733ca69164982489d0e.svg"
 import dynamic from "next/dynamic";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
@@ -101,7 +91,7 @@ export const CryptoPrices = () => {
   const cryptoData = [
     {
       key: "coin1",
-      coinImg: bitcoin,
+      coinImg: "/images/svgs/icon-bitcoin.svg",
       coin: "Bitcoin",
       symbol: "BTC",
       price: "$55,378.32",
@@ -114,7 +104,7 @@ export const CryptoPrices = () => {
     },
     {
       key: "coin2",
-      coinImg: etherium,
+      coinImg: "/images/crypto/ethereum-coin.webp",
       coin: "Etherium",
       symbol: "ETH",
       price: "$2,334.17",
@@ -127,7 +117,7 @@ export const CryptoPrices = () => {
     },
     {
       key: "coin3",
-      coinImg: tether,
+      coinImg: "/images/crypto/Tether.webp",
       coin: "Tether",
       symbol: "USDT",
       price: "$0.999",
@@ -140,7 +130,7 @@ export const CryptoPrices = () => {
     },
     {
       key: "coin4",
-      coinImg: bnb,
+      coinImg: "/images/crypto/bnb-icon2_2x.webp",
       coin: "BNB",
       symbol: "BNB",
       price: "$508.57",
@@ -153,7 +143,7 @@ export const CryptoPrices = () => {
     },
     {
       key: "coin5",
-      coinImg: solana,
+      coinImg: "/images/crypto/solana.webp",
       coin: "Solana",
       symbol: "SOL",
       price: "$130.18",
@@ -166,7 +156,7 @@ export const CryptoPrices = () => {
     },
     {
       key: "coin6",
-      coinImg: usdc,
+      coinImg: "/images/crypto/usdc.webp",
       coin: "USDC",
       symbol: "USDC",
       price: "$1.00",
@@ -179,7 +169,7 @@ export const CryptoPrices = () => {
     },
     {
       key: "coin7",
-      coinImg: xrp,
+      coinImg: "/images/crypto/xrp-symbol-white-128.webp",
       coin: "XRP",
       symbol: "XRP",
       price: "$0.5325",
@@ -256,14 +246,14 @@ export const CryptoPrices = () => {
                             content={
                               <div className="w-64 p-5 overflow-hidden border border-border dark:border-darkborder">
                                 <div className="flex items-center gap-1.5 mb-3">
-                                  <Image src={xIcon} alt="icon" width={22} />
+                                  <Image src={"/images/crypto/x-icon.png"} alt="icon" width={22} />
                                   <p className="text-xs font-medium">BingX</p>
                                 </div>
-                                <Image src={bingIcon} alt="bing-icon" className="w-full max-w-full rounded-md" />
+                                <Image src={"/images/crypto/bingx.png"} alt="bing-icon" className="w-full max-w-full rounded-md" />
                                 <p className="text-[13px] my-4 text-wrap">Get started on BingX today and access a range of services, including spot trading, derivatives, copy trading, and more.</p>
                                 <Button color={"primary"} >Sign Up Now!</Button>
                                 <div className="flex items-center mt-2 gap-2">
-                                  
+                                  <Image src={"/images/crypto/gecko.svg"} alt="coin" />
                                   <p className="text-[13px] font-semibold">Sponsored</p>
                                 </div>
                               </div>

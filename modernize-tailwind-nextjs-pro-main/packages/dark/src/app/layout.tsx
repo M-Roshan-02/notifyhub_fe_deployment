@@ -6,7 +6,7 @@ import "./css/globals.css";
 import { Flowbite, ThemeModeScript } from "flowbite-react";
 import customTheme from "@/utils/theme/custom-theme";
 import { CustomizerContextProvider } from "@/app/context/CustomizerContext";
-import { ApolloWrapper } from "@/app/components/ApolloWrapper";
+// import { ApolloWrapper } from "@/app/components/ApolloWrapper";
 import "../utils/i18n";
 import NextTopLoader from "nextjs-toploader";
 
@@ -27,14 +27,14 @@ export default function RootLayout({
         <ThemeModeScript />
       </head>
       <body className={`${plus_jakarta_sans.className}`}>
-        <ApolloWrapper>
+        {/* <ApolloWrapper> */}
           <Flowbite theme={{ theme: customTheme }}>
             <CustomizerContextProvider>
               <NextTopLoader color="var(--color-primary)" />
               {children}
             </CustomizerContextProvider>
           </Flowbite>
-        </ApolloWrapper>
+        {/* </ApolloWrapper> */}
       </body>
     </html>
   );

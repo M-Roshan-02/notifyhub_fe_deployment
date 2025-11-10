@@ -18,13 +18,7 @@ const BCrumb = [
     },
 ];
 
-interface PageProps {
-    params: {
-        slug: string;
-    };
-}
-
-const Page = ({ params }: PageProps) => {
+function Page({ params }: any) {
     return (
         <>
             <BreadcrumbComp title="Edit Reminder" items={BCrumb} />
