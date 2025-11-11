@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Alert, Button, Label, Select, TextInput } from "flowbite-react";
 import { useRouter } from "next/navigation";
-import { reminderService } from "@/services/api";
+import { reminderService } from "@/app/services/api";
 import { Reminder } from "@/types/apps/invoice";
 
 const CreateReminderPage = () => {

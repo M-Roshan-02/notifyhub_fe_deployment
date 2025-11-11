@@ -5,16 +5,15 @@ import { userService, departmentService } from '@/app/services/api';
 
 export type UserDataContextType = {
     posts: PostType[];
-    user: any; // Changed from users: any[]
+    users: any[]; // Changed from user: any (singular)
     gallery: any[];
-    // followers: any[]; // Removed
     departments: any[];
     profileData: profiledataType;
     loading: boolean;
     error: null | any;
-    // followerSearch: string; // Removed
+    userSearch: string;
     departmentSearch: string;
-    // setFollowerSearch: React.Dispatch<React.SetStateAction<string>>; // Removed
+    setUserSearch: React.Dispatch<React.SetStateAction<string>>;
     setDepartmentSearch: React.Dispatch<React.SetStateAction<string>>;
     addGalleryItem: (item: any) => void;
     addReply: (postId: number, commentId: number, reply: string) => void;
@@ -103,7 +102,6 @@ const filterDepartments = () => {
                 posts,
                 user,
                 gallery,
-                followers: [], // Provided an empty array for followers
                 departments: filterDepartments(),
                 profileData,
                 loading,

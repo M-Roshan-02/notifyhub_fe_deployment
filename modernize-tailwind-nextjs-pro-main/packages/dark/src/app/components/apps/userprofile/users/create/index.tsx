@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, TextInput, Card, Label } from "flowbite-react";
-import { userService } from "@/services/api";
+import { userService } from "@/app/services/api";
 
 const CreateUserApp = () => {
   const router = useRouter();

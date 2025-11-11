@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Checkbox, Table, TextInput, Button, Modal, Badge, Tooltip, Alert, Spinner } from "flowbite-react";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
-import { reminderService } from "@/services/api";
+import { reminderService } from "@/app/services/api";
 import { Reminder } from "@/types/apps/invoice";
 
 function ReminderList() {
