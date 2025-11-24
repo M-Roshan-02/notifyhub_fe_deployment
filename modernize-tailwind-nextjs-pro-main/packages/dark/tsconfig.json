@@ -24,6 +24,9 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@nextauth/*": [
+        "../nextauth/src/*"
       ]
     },
     "target": "ES2017"

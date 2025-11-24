@@ -12,10 +12,11 @@ import { Social } from "../components/dashboards/modern/Social";
 import { SellingProducts } from "../components/dashboards/modern/SellingProducts";
 import { WeeklyStats } from "../components/dashboards/modern/WeeklyStats";
 import { ReminderList } from "../components/dashboards/modern/ReminderList";
+import { ApolloWrapper } from "../components/ApolloWrapper"; // Import ApolloWrapper
 
 const page = () => {
   return (
-    <>
+    <ApolloWrapper> {/* Wrap content with ApolloWrapper */}
       <div className="grid grid-cols-12 gap-6">
         <div className="col-span-12">
           <TopCards/>
@@ -52,7 +53,7 @@ const page = () => {
         </div>
       </div>
      
-    </>
+    </ApolloWrapper>
   );
 };
 

@@ -9,7 +9,6 @@ const CreateDepartmentApp = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
-    userId: "1", // Static for now
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -26,9 +25,7 @@ const CreateDepartmentApp = () => {
     setError(null);
     try {
       await departmentService.createDepartment({ 
-        title: formData.name, 
-        body: "", 
-        userId: formData.userId 
+        name: formData.name, 
       });
       router.push("/apps/user-profile/followers");
     } catch (err: any) {

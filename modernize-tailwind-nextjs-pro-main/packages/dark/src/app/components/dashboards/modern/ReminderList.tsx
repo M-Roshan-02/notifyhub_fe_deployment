@@ -1,17 +1,31 @@
 "use client"
 import { Badge, Table, Button } from "flowbite-react"
 import CardBox from "../../shared/CardBox"
-import { Reminder } from "@/app/(DashboardLayout)/types/apps/reminder";
-import useSWR from "swr";
-import { getFetcher } from "@/app/api/globalFetcher";
+import { Reminder } from "@/types/apps/invoice";
 import Link from "next/link";
+import * as ApolloReact from '@apollo/client/react'; // Changed import
+import { gql } from '@apollo/client';
+
+const LIST_REMINDERS_QUERY = gql`
+  query Reminders($active: Boolean) {
+    reminders(active: $active) {
+      id
+      title
+      description
+      reminderStartDate
+      reminderEndDate
+      active
+    }
+  }
+`;
 
 export const ReminderList = () => {
+    const { data, loading, error } = ApolloReact.useQuery(LIST_REMINDERS_QUERY, {
+        variables: { active: true }, // Pass the active variable
+    });
 
-    const { data, error } = useSWR<Reminder[]>("/api/reminders", getFetcher);
-
-    if (error) return <div>Failed to load</div>
-    if (!data) return <div>Loading...</div>
+    if (error) return <div>Error: {error.message}</div>
+    if (loading) return <div>Loading...</div>
 
     const renderTableRows = (data: Reminder[]) => (
         <Table.Body className="divide-y divide-border dark:divide-darkborder">
@@ -27,8 +41,8 @@ export const ReminderList = () => {
                     </Table.Cell>
                     <Table.Cell>
                         <Badge 
-                            color={`${item.active ? "success" : "failure"}`} 
-                            className="text-sm rounded-md py-1.1 px-2 w-11/12 justify-center" 
+                            color={`${item.active ? "success" : "failure"}`}
+                            className="text-sm rounded-md py-1.1 px-2 w-11/12 justify-center"
                         >
                             {item.active ? "Active" : "Inactive"}
                         </Badge>
@@ -73,19 +87,21 @@ export const ReminderList = () => {
 
     return (
         <CardBox>
-            <div className="sm:flex items-center justify-between mb-6">
-                <div>
-                    <h5 className="card-title">Reminder List</h5>
+            <> {/* Added React Fragment */}
+                <div className="sm:flex items-center justify-between mb-6">
+                    <div>
+                        <h5 className="card-title">Reminder List</h5>
+                    </div>
+                    <div className="sm:mt-0 mt-4">
+                        <Link href="/apps/invoice/list">
+                            <Button color="blue" size="sm" className="flex items-center justify-center rounded-md gap-3 !text-sm text-start leading-[normal] font-normal text-link dark:text-darklink dark:hover:text-primary !text-white  hover:text-white bg-primary mb-0.5 hover:bg-primary hover:text-whit">
+                                View All
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
-                <div className="sm:mt-0 mt-4">
-                    <Link href="/apps/invoice/list">
-                        <Button color="blue" size="sm" className="flex items-center justify-center rounded-md gap-3 !text-sm text-start leading-[normal] font-normal text-link dark:text-darklink dark:hover:text-primary !text-white  hover:text-white bg-primary mb-0.5 hover:bg-primary hover:text-whit">
-                            View All
-                        </Button>
-                    </Link>
-                </div>
-            </div>
-            {renderTable(data.slice(0, 3))}
+                {data && renderTable(data.reminders.slice(0, 3))} {/* Corrected usage */}
+            </> {/* Closed React Fragment */}
         </CardBox>
     )
 }

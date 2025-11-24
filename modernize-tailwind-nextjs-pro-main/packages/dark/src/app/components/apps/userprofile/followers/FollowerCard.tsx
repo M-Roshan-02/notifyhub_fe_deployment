@@ -4,6 +4,7 @@ import { Badge, Button, TextInput, Modal, Label } from "flowbite-react"; // 👈
 import Link from "next/link";
 import CardBox from "@/app/components/shared/CardBox";
 import { UserDataContext } from "@/app/context/UserDataContext/index";
+import { departmentService } from "@/app/services/api"; // Import departmentService
 
 interface Department {
     id: React.Key | null | undefined;
@@ -50,16 +51,7 @@ const EditDepartmentModal = ({
     setIsSaving(true);
 
     try {
-      
-      console.log(`[API MOCK] Attempting to update department ID: ${department.id} with name: ${formData.name}`); 
-      
-      
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      
-      console.log("[API MOCK] Department update successful!");
-      
-      
+      await departmentService.updateDepartment({ id: String(department.id), name: formData.name });
       onClose();
     } catch (err) {
       console.error("Department Save Error:", err);

@@ -17,10 +17,7 @@ const CreateReminderPage = () => {
     senderEmail: "",
     receiverEmail: "",
     intervalType: "Daily",
-    sendReminderAt: "",
     reminderEndDate: "",
-    status: "Pending",
-    userId: "1", // Assuming a default user for now
     active: true,
     reminderStartDate: "",
     phoneNo: "",
@@ -81,8 +78,8 @@ const CreateReminderPage = () => {
               </Select>
             </div>
             <div className="lg:col-span-6 col-span-12">
-              <Label htmlFor="sendReminderAt">Send Reminder At</Label>
-              <TextInput id="sendReminderAt" type="time" value={formData.sendReminderAt} onChange={(e) => handleChange('sendReminderAt', e.target.value)} required />
+              <Label htmlFor="reminderStartDate">Reminder Start Date</Label>
+              <TextInput id="reminderStartDate" type="date" value={formData.reminderStartDate} onChange={(e) => handleChange('reminderStartDate', e.target.value)} required />
             </div>
             <div className="lg:col-span-6 col-span-12">
               <Label htmlFor="reminderEndDate">Reminder End Date</Label>

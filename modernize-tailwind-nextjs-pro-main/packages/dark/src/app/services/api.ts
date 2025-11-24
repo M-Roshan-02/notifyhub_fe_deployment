@@ -32,6 +32,38 @@ interface UpdateReminderInput {
     completed?: boolean;
 }
 
+// New interfaces for Department mutations
+interface CreateDepartmentInput {
+    name: string;
+}
+
+interface UpdateDepartmentInput {
+    id: string;
+    name?: string;
+}
+
+// Define the type for the updateDepartment mutation result
+type UpdateDepartmentMutationResult = {
+  updateDepartment: {
+    ok: boolean;
+    department: {
+      id: string;
+      name: string;
+    };
+  };
+};
+
+// Define the type for the updateDepartment mutation result
+type UpdateDepartmentMutationResult = {
+  updateDepartment: {
+    ok: boolean;
+    department: {
+      id: string;
+      name: string;
+    };
+  };
+};
+
 const LIST_REMINDERS_QUERY = gql`
   query Reminders($active: Boolean) {
     reminders(active: $active) {
@@ -135,6 +167,30 @@ const DELETE_REMINDER_MUTATION = gql`
   }
 `;
 
+// New Department Mutations
+const CREATE_DEPARTMENT_MUTATION = gql`
+  mutation CreateDepartment($name: String!) {
+    createDepartment(name: $name) {
+      ok
+      department { id name company { id name } }
+    }
+  }
+`;
+
+const UPDATE_DEPARTMENT_MUTATION = gql`
+  mutation UpdateDepartment($id: ID!, $name: String) {
+    updateDepartment(id: $id, name: $name) {
+      ok
+      department { id name }
+    }
+  }
+`;
+
+const DELETE_DEPARTMENT_MUTATION = gql`
+  mutation DeleteDepartment($id: ID!) {
+    deleteDepartment(id: $id) { ok }
+  }
+`;
 
 
 export const reminderService = {
@@ -403,53 +459,75 @@ export const departmentService = {
 
 
 
-  async createDepartment(deptData: { userId: string; title: string; body: string }) {
+  async createDepartment(deptData: CreateDepartmentInput): Promise<{ ok: boolean; department: { id: string; name: string; company: { id: string; name: string } } }> {
 
-    const mutation = gql`
+    try {
 
-      mutation CreateDepartment($userId: ID!, $title: String!, $body: String!) {
+      const result = await client.mutate<{ createDepartment: { ok: boolean; department: { id: string; name: string; company: { id: string; name: string } } } }>({
 
-        createPost(input: { userId: $userId, title: $title, body: $body }) {
+        mutation: CREATE_DEPARTMENT_MUTATION,
 
-          id
+        variables: deptData,
 
-          title
-
-          body
-
-          user {
-
-            id
-
-            name
-
-          }
-
-        }
-
+      });
+      if (!result.data || !result.data.createDepartment) {
+        throw new Error("Failed to create department.");
       }
+      return result.data.createDepartment;
 
-    `;
+    } catch (error) {
 
-    const result = await client.mutate<{ createPost: { id: string; title: string; body: string; user: { id: string; name: string } } }>({
+      console.error("Error creating department:", error);
 
-      mutation,
+      throw error;
 
-      variables: {
-
-        userId: deptData.userId,
-
-        title: deptData.title,
-
-        body: deptData.body,
-
-      },
-
-    });
-    if (!result.data || !result.data.createPost) {
-      throw new Error("Failed to create department.");
     }
-    return result.data.createPost;
+
+  },
+
+  async updateDepartment(deptData: UpdateDepartmentInput): Promise<{ ok: boolean; department: { id: string; name: string } }> {
+
+    try {
+
+      const result = await client.mutate<UpdateDepartmentMutationResult>({
+
+        mutation: UPDATE_DEPARTMENT_MUTATION,
+
+        variables: deptData,
+
+      });
+      if (!result.data || !result.data.updateDepartment) {
+        throw new Error("Failed to update department.");
+      }
+      return result.data.updateDepartment;
+
+    } catch (error) {
+
+      console.error("Error updating department:", error);
+
+      throw error;
+
+    }
+
+  },
+
+  async deleteDepartment(id: string): Promise<{ ok: boolean }> {
+
+    try {
+
+      const result = await client.mutate<{ deleteDepartment: { ok: boolean } }>({ mutation: DELETE_DEPARTMENT_MUTATION, variables: { id } });
+      if (!result.data || !result.data.deleteDepartment) {
+        throw new Error("Failed to delete department.");
+      }
+      return result.data.deleteDepartment;
+
+    } catch (error) {
+
+      console.error("Error deleting department:", error);
+
+      throw error;
+
+    }
 
   },
 

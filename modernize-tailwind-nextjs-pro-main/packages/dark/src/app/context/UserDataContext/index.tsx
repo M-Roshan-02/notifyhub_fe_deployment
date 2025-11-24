@@ -1,7 +1,8 @@
 'use client'
 import React, { createContext, useState, useEffect } from 'react';
+import * as ApolloReact from '@apollo/client/react'; // Changed import
+import { gql } from '@apollo/client'; // Keep gql from here
 import { PostType, profiledataType } from '@/app/(DashboardLayout)/types/apps/userProfile';
-import { userService, departmentService, reminderService } from '../../services/api';
 import { Reminder } from '@/types/apps/invoice'; // Import Reminder type
 
 export type UserDataContextType = {
@@ -31,29 +32,102 @@ export const UserDataContext = createContext<UserDataContextType | undefined>(un
 
 const config = {
     posts: [], 
-    users: [], // Still here for config, but not used for state
+    users: [],
     gallery: [],
-    followers: [], // Still here for config, but not used for state
     departments: [],
-    reminders: [], // Initialize reminders in config
-    followerSearch: '',
+    reminders: [],
     departmentSearch: '',
     loading: true,
 };
 
+const ME_QUERY = gql`
+  query Me {
+    me {
+      id
+      username
+      email
+      company {
+        id
+        name
+      }
+    }
+  }
+`;
+
+const LIST_USERS_QUERY = gql`
+  query Users {
+    users {
+      id
+      username
+      email
+      company {
+        id
+        name
+      }
+    }
+  }
+`;
+
+const LIST_DEPARTMENTS_QUERY = gql`
+  query Departments {
+    departments {
+      id
+      name
+      company {
+        id
+        name
+      }
+    }
+  }
+`;
+
+const LIST_REMINDERS_QUERY = gql`
+  query Reminders($active: Boolean) {
+    reminders(active: $active) {
+      id
+      title
+      description
+      reminderStartDate
+      reminderEndDate
+      active
+    }
+  }
+`;
+
 export const UserDataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [posts, setPosts] = useState<PostType[]>(config.posts);
-    const [user, setUser] = useState<any>(null); // Changed from users
-    const [users, setUsers] = useState<any[]>([]); // Add this
+    const [user, setUser] = useState<any>(null);
+    const [users, setUsers] = useState<any[]>([]);
     const [gallery, setGallery] = useState<any[]>(config.gallery);
-    // const [followers, setFollowers] = useState<any[]>(config.followers); // Removed
     const [departments, setDepartments] = useState<any[]>(config.departments);
-    const [reminders, setReminders] = useState<Reminder[]>(config.reminders); // Add reminders state
-    // const [followerSearch, setFollowerSearch] = useState<string>(config.followerSearch); // Removed
+    const [reminders, setReminders] = useState<Reminder[]>(config.reminders);
     const [departmentSearch, setDepartmentSearch] = useState<string>(config.departmentSearch);
     const [userSearch, setUserSearch] = useState<string>('');
     const [error, setError] = useState<any>(null);
     const [loading, setLoading] = useState<boolean>(config.loading);
+
+    const { data: meData, loading: meLoading, error: meError } = ApolloReact.useQuery(ME_QUERY);
+    const { data: usersData, loading: usersLoading, error: usersError } = ApolloReact.useQuery(LIST_USERS_QUERY);
+    const { data: deptsData, loading: deptsLoading, error: deptsError } = ApolloReact.useQuery(LIST_DEPARTMENTS_QUERY);
+    const { data: remindersData, loading: remindersLoading, error: remindersError } = ApolloReact.useQuery(LIST_REMINDERS_QUERY, {
+        variables: { active: true },
+    });
+
+    useEffect(() => {
+        if (meData) setUser(meData.me);
+        if (usersData) setUsers(usersData.users);
+        if (deptsData) setDepartments(deptsData.departments);
+        if (remindersData) setReminders(remindersData.reminders);
+
+        const anyError = meError || usersError || deptsError || remindersError;
+        if (anyError) {
+            console.error("Error fetching data in UserDataContext:", anyError);
+            setError(anyError);
+        }
+
+        setLoading(meLoading || usersLoading || deptsLoading || remindersLoading);
+
+    }, [meData, usersData, deptsData, remindersData, meLoading, usersLoading, deptsLoading, remindersLoading, meError, usersError, deptsError, remindersError]);
 
     const [profileData, setProfileData] = useState<profiledataType>({
         name: 'Mathew Anderson',
@@ -64,49 +138,15 @@ export const UserDataProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         followersCount: 3586,
         followingCount: 2659,
     });
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true)
-                const userResponse = await userService.getMe(); // Changed from usersResponse
-                const usersResponse = await userService.getAllUsers(); // Add this
-                const deptsResponse = await departmentService.getDepartments();
-                const remindersResponse = await reminderService.getReminders(); // Fetch reminders
-                setUser(userResponse); // Changed from setUsers(usersResponse.data)
-                setUsers(usersResponse); // Add this
-                // setFollowers(usersResponse.data); // Removed
-                setDepartments(deptsResponse);
-                setReminders(remindersResponse); // Set reminders state
-            } catch (err) {
-                console.error("Error fetching data in UserDataContext:", err);
-                setError(err);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchData();
-    }, []);
-
     
-    // const filterFollowers = () => { // Removed
-    //     if (followers) {
-    //         return followers.filter((t) =>
-    //             t.name.toLowerCase().includes(followerSearch.toLowerCase())
-    //         );
-    //     }
-    //     return followers;
-    // };
-    
-   
-const filterDepartments = () => {
-    if (departments && departmentSearch) {
-        return departments.filter((t) =>
-            (typeof t.name === 'string' && t.name.toLowerCase().includes(departmentSearch.toLowerCase())) 
-        ); // Changed t.title to t.name
-    }
-    return departments;
-};
+    const filterDepartments = () => {
+        if (departments && departmentSearch) {
+            return departments.filter((t) =>
+                (typeof t.name === 'string' && t.name.toLowerCase().includes(departmentSearch.toLowerCase())) 
+            );
+        }
+        return departments;
+    };
 
     return (
         <UserDataContext.Provider
@@ -116,7 +156,7 @@ const filterDepartments = () => {
                 users,
                 gallery,
                 departments: filterDepartments(),
-                reminders, // Provide reminders in context
+                reminders,
                 profileData,
                 loading,
                 error,
@@ -127,8 +167,6 @@ const filterDepartments = () => {
                 likeReply: () => {},
                 toggleFollow: () => {},
                 toggleDepartmentStatus: () => {},
-                // setFollowerSearch, // Removed
-                // followerSearch, // Removed
                 setDepartmentSearch,
                 departmentSearch,
                 userSearch,
@@ -138,4 +176,5 @@ const filterDepartments = () => {
             {children}
         </UserDataContext.Provider>
     );
-};  
+};
+  
