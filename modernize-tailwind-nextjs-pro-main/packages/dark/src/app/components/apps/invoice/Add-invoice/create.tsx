@@ -50,11 +50,11 @@ const CreateReminderPage = () => {
       <form onSubmit={handleSubmit}>
         <div className="bg-lightgray dark:bg-gray-800/70 p-6 my-6 rounded-md">
           <div className="grid grid-cols-12 gap-6">
-            <div className="lg:col-span-6 col-span-12">
+            <div className="lg:col-span-12 col-span-12">
               <Label htmlFor="title">Title</Label>
               <TextInput id="title" value={formData.title} onChange={(e) => handleChange('title', e.target.value)} required />
             </div>
-            <div className="lg:col-span-6 col-span-12">
+            <div className="lg:col-span-12 col-span-12">
               <Label htmlFor="description">Description</Label>
               <Textarea
                 id="description"
