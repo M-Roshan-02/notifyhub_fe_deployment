@@ -92,62 +92,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             });
 
             return () => unsubscribeFirebase();
-        // else if (state.platform === 'Supabase') {
-        //     // Restore Supabase session
-        //     const restoreSession = async () => {
-        //         const { data: { session } } = await supabase.auth.getSession();
-        //         if (session?.user) {
-        //
-        //             const fullName = session.user.user_metadata?.full_name || session.user.email;
-        //             dispatch({
-        //                 type: 'AUTH_STATE_CHANGED',
-        //                 payload: {
-        //                     isAuthenticated: true,
-        //                     user: {
-        //                         id: session.user.id,
-        //                         email: session.user.email,
-        //                         displayName: fullName,
-        //                     },
-        //                     platform: 'Supabase',
-        //                 },
-        //             });
-        //         } else {
-        //             dispatch({
-        //                 type: 'AUTH_STATE_CHANGED',
-        //                 payload: { isAuthenticated: false, user: null, platform: 'Supabase' },
-        //             });
-        //         }
-        //     };
-        //
-        //     restoreSession();
-        //     const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-        //         if (session?.user) {
-        //             const fullName = session.user.user_metadata?.full_name || session.user.email;
-        //             dispatch({
-        //                 type: 'AUTH_STATE_CHANGED',
-        //                 payload: {
-        //                     isAuthenticated: true,
-        //                     user: {
-        //                         id: session.user.id,
-        //                         avatar: session.user.user_metadata?.avatar || "",
-        //                         email: session.user.email,
-        //                         displayName: fullName,
-        //                     },
-        //                     platform: 'Supabase',
-        //                 },
-        //             });
-        //         } else {
-        //             dispatch({
-        //                 type: 'AUTH_STATE_CHANGED',
-        //                 payload: { isAuthenticated: false, user: null, platform: 'Supabase' },
-        //             });
-        //         }
-        //     });
-        //
-        //     return () => {
-        //         authListener?.subscription?.unsubscribe();
-        //     };
-        // }
+
         else if (state.platform === 'NextAuth') {
             if (session?.user) {
                 dispatch({
