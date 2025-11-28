@@ -156,28 +156,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 throw new Error(error.message);
             }
 
-        // else if (state.platform === 'Supabase') {
-        //
-        //
-        //     try {
-        //         const { user, error }: any = await supabase.auth.signUp({
-        //             email,
-        //             password,
-        //             options: {
-        //                 data: { full_name: userName },
-        //             },
-        //         });
-        //
-        //         if (error) {
-        //             throw error;
-        //         }
-        //
-        //         console.log('User registered successfully, confirmation email sent');
-        //     } catch (error: any) {
-        //         console.error('Error signing up with Supabase:', error);
-        //         throw new Error(error.message);
-        //     }
-        // }
+
         } else if (state.platform === 'NextAuth') {
             const resp = await fetch('/app/signup/', {
                 method: 'POST',
