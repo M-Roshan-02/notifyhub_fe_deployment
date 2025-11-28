@@ -43,6 +43,10 @@ const reducer = (state: InitialStateType, action: any) => {
 const AuthContext = createContext<any | null>({
     ...initialState,
     signup: () => Promise.resolve(),
+    confirmMfa: () => Promise.resolve(),
+    passwordStep: () => Promise.resolve(), // Add passwordStep here
+    verifyTotp: () => Promise.resolve(),   // Add verifyTotp here
+    fetchAccessToken: () => Promise.resolve(), // Add fetchAccessToken here
     signin: () => Promise.resolve(),
     logout: () => Promise.resolve(),
     setPlatform: () => { },
@@ -238,12 +242,78 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         //         throw new Error(error.message);
         //     }
         // }
+        } else if (state.platform === 'NextAuth') {
+            const resp = await fetch('/app/signup/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password, username: userName }),
+            });
+            if (!resp.ok) {
+                const errorData = await resp.json();
+                throw new Error(errorData.message || 'Signup failed');
+            }
+            return resp.json(); // contains user + mfa metadata
+        }
         return null;
     };
 
+    const confirmMfa = async (code: string, accessToken: string) => {
+        const resp = await fetch('/app/mfa/confirm/', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ code }),
+        });
+        const data = await resp.json();
+        if (!data.ok) throw new Error(data.message || 'Invalid code');
+        return data;
+    };
 
 
+    const passwordStep = async (username: string, password_val: string) => { // Renamed 'password' to 'password_val' to avoid conflict
+        const resp = await fetch('/app/login/password/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password: password_val }),
+        });
+        return resp.json(); // { ok, mfa_required, mfa_challenge_id }
+    };
 
+    const verifyTotp = async (challengeId: string, totpCode: string) => {
+        const resp = await fetch('/app/mfa/verify/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                mfa_challenge_id: challengeId,
+                totp_code: totpCode,
+            }),
+        });
+        const data = await resp.json(); // { ok, mfa_token }
+        if (!data.ok) throw new Error(data.message || 'Invalid OTP');
+        return data.mfa_token;
+    };
+
+    const fetchAccessToken = async ({ username, password_val, mfaToken }: { username: string, password_val: string, mfaToken?: string }) => {
+        const params = new URLSearchParams({
+            grant_type: 'password',
+            username,
+            password: password_val,
+            client_id: "CLIENT_ID_PLACEHOLDER", // Replace with actual client_id if available
+            client_secret: "CLIENT_SECRET_PLACEHOLDER", // Replace with actual client_secret if available
+        });
+        if (mfaToken) params.append('mfa_token', mfaToken);
+
+        const resp = await fetch('/o/token/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params,
+        });
+        const data = await resp.json(); // { access_token, refresh_token, ... }
+        if (!resp.ok) throw new Error(data.error_description || 'OAuth error');
+        return data;
+    };
 
     const signin = async (email: string, password: string) => {
         if (state.platform === 'Firebase') {
@@ -284,6 +354,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 setPlatform,
                 loginWithProvider,
                 signup,
+                confirmMfa,
+                passwordStep, // Add passwordStep here
+                verifyTotp,   // Add verifyTotp here
+                fetchAccessToken, // Add fetchAccessToken here
                 signin,
                 logout,
             }}
