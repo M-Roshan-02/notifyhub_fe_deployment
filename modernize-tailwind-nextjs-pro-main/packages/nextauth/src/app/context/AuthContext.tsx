@@ -1,7 +1,17 @@
 "use client"
 import { createContext, useEffect, useReducer, ReactNode } from 'react';
 import { firebase } from '@/app/guards/firebase/Firebase';
-import { supabase } from '@/app/guards/supabase/supabaseClient';
+// import { supabase } from '@/app/guards/supabase/supabaseClient'; // Comment out real import
+const supabase: any = { // Dummy supabase object
+    auth: {
+        getSession: () => ({ data: { session: null } }),
+        onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+        signInWithOAuth: () => Promise.resolve(),
+        signUp: () => Promise.resolve(),
+        signInWithPassword: () => Promise.resolve(),
+        signOut: () => Promise.resolve(),
+    }
+};
 import { useSession, signIn, signOut } from 'next-auth/react';
 
 // Define the initial state structure
@@ -78,62 +88,62 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             });
 
             return () => unsubscribeFirebase();
-        } else if (state.platform === 'Supabase') {
-            // Restore Supabase session
-            const restoreSession = async () => {
-                const { data: { session } } = await supabase.auth.getSession();
-                if (session?.user) {
-
-                    const fullName = session.user.user_metadata?.full_name || session.user.email;
-                    dispatch({
-                        type: 'AUTH_STATE_CHANGED',
-                        payload: {
-                            isAuthenticated: true,
-                            user: {
-                                id: session.user.id,
-                                email: session.user.email,
-                                displayName: fullName,
-                            },
-                            platform: 'Supabase',
-                        },
-                    });
-                } else {
-                    dispatch({
-                        type: 'AUTH_STATE_CHANGED',
-                        payload: { isAuthenticated: false, user: null, platform: 'Supabase' },
-                    });
-                }
-            };
-
-            restoreSession();
-            const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-                if (session?.user) {
-                    const fullName = session.user.user_metadata?.full_name || session.user.email;
-                    dispatch({
-                        type: 'AUTH_STATE_CHANGED',
-                        payload: {
-                            isAuthenticated: true,
-                            user: {
-                                id: session.user.id,
-                                avatar: session.user.user_metadata?.avatar || "",
-                                email: session.user.email,
-                                displayName: fullName,
-                            },
-                            platform: 'Supabase',
-                        },
-                    });
-                } else {
-                    dispatch({
-                        type: 'AUTH_STATE_CHANGED',
-                        payload: { isAuthenticated: false, user: null, platform: 'Supabase' },
-                    });
-                }
-            });
-
-            return () => {
-                authListener?.subscription?.unsubscribe();
-            };
-        }
+        // else if (state.platform === 'Supabase') {
+        //     // Restore Supabase session
+        //     const restoreSession = async () => {
+        //         const { data: { session } } = await supabase.auth.getSession();
+        //         if (session?.user) {
+        //
+        //             const fullName = session.user.user_metadata?.full_name || session.user.email;
+        //             dispatch({
+        //                 type: 'AUTH_STATE_CHANGED',
+        //                 payload: {
+        //                     isAuthenticated: true,
+        //                     user: {
+        //                         id: session.user.id,
+        //                         email: session.user.email,
+        //                         displayName: fullName,
+        //                     },
+        //                     platform: 'Supabase',
+        //                 },
+        //             });
+        //         } else {
+        //             dispatch({
+        //                 type: 'AUTH_STATE_CHANGED',
+        //                 payload: { isAuthenticated: false, user: null, platform: 'Supabase' },
+        //             });
+        //         }
+        //     };
+        //
+        //     restoreSession();
+        //     const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+        //         if (session?.user) {
+        //             const fullName = session.user.user_metadata?.full_name || session.user.email;
+        //             dispatch({
+        //                 type: 'AUTH_STATE_CHANGED',
+        //                 payload: {
+        //                     isAuthenticated: true,
+        //                     user: {
+        //                         id: session.user.id,
+        //                         avatar: session.user.user_metadata?.avatar || "",
+        //                         email: session.user.email,
+        //                         displayName: fullName,
+        //                     },
+        //                     platform: 'Supabase',
+        //                 },
+        //             });
+        //         } else {
+        //             dispatch({
+        //                 type: 'AUTH_STATE_CHANGED',
+        //                 payload: { isAuthenticated: false, user: null, platform: 'Supabase' },
+        //             });
+        //         }
+        //     });
+        //
+        //     return () => {
+        //         authListener?.subscription?.unsubscribe();
+        //     };
+        // }
         else if (state.platform === 'NextAuth') {
             if (session?.user) {
                 dispatch({
@@ -173,14 +183,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                     throw new Error('Provider not supported');
             }
             return firebase.auth().signInWithPopup(providerInstance);
-        } else if (state.platform === 'Supabase') {
-            return supabase.auth.signInWithOAuth({
-                provider,
-                options: {
-                    redirectTo: `${window.location.origin}/auth/callback`,
-                },
-            });
-        }
+        // } else if (state.platform === 'Supabase') {
+        //     return supabase.auth.signInWithOAuth({
+        //         provider,
+        //         options: {
+        //             redirectTo: `${window.location.origin}/auth/callback`,
+        //         },
+        //     });
+        // }
         else if (state.platform === 'NextAuth') {
             return signIn(provider);
         }
@@ -206,28 +216,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 throw new Error(error.message);
             }
 
-        } else if (state.platform === 'Supabase') {
-
-
-            try {
-                const { user, error }: any = await supabase.auth.signUp({
-                    email,
-                    password,
-                    options: {
-                        data: { full_name: userName },
-                    },
-                });
-
-                if (error) {
-                    throw error;
-                }
-
-                console.log('User registered successfully, confirmation email sent');
-            } catch (error: any) {
-                console.error('Error signing up with Supabase:', error);
-                throw new Error(error.message);
-            }
-        }
+        // else if (state.platform === 'Supabase') {
+        //
+        //
+        //     try {
+        //         const { user, error }: any = await supabase.auth.signUp({
+        //             email,
+        //             password,
+        //             options: {
+        //                 data: { full_name: userName },
+        //             },
+        //         });
+        //
+        //         if (error) {
+        //             throw error;
+        //         }
+        //
+        //         console.log('User registered successfully, confirmation email sent');
+        //     } catch (error: any) {
+        //         console.error('Error signing up with Supabase:', error);
+        //         throw new Error(error.message);
+        //     }
+        // }
         return null;
     };
 
@@ -238,20 +248,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const signin = async (email: string, password: string) => {
         if (state.platform === 'Firebase') {
             return firebase.auth().signInWithEmailAndPassword(email, password);
-        } else if (state.platform === 'Supabase') {
-            try {
-                const { error } = await supabase.auth.signInWithPassword({
-                    email,
-                    password,
-                });
-                console.log(error);
-                if (error) throw error;
-
-            } catch (error: any) {
-                throw new Error(error.message);
-            }
-        }
-        else if (state.platform === 'NextAuth') {
+            // } else if (state.platform === 'Supabase') {
+            //     try {
+            //         const { error } = await supabase.auth.signInWithPassword({
+            //             email,
+            //             password,
+            //         });
+            //         console.log(error);
+            //         if (error) throw error;
+            //
+            //     } catch (error: any) {
+            //         throw new Error(error.message);
+            //     }
+            // }        else if (state.platform === 'NextAuth') {
             return signIn('credentials', { email, password });
         }
         return null;
@@ -260,9 +269,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const logout = async () => {
         if (state.platform === 'Firebase') {
             await firebase.auth().signOut();
-        } else if (state.platform === 'Supabase') {
-            await supabase.auth.signOut();
-        }
+        // else if (state.platform === 'Supabase') {
+        //     await supabase.auth.signOut();
+        // }
         else if (state.platform === 'NextAuth') {
             await signOut();
         }
