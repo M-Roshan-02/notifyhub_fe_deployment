@@ -80,7 +80,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         if (state.platform === 'Firebase') {
 
-            const unsubscribeFirebase = firebase.auth().onAuthStateChanged((user) => {
+            const unsubscribeFirebase = firebase.auth().onAuthStateChanged((user: firebase.User | null) => {
                 if (user) {
                     const fullName = user.displayName
 
