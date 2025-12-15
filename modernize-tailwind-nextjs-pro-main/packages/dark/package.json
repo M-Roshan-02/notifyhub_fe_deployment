@@ -65,7 +65,7 @@
     "devextreme": "22.2.6",
     "devextreme-react": "22.2.6",
     "embla-carousel-react": "^8.5.2",
-    "firebase": "^9.0.0",
+    "firebase": "^12.6.0",
     "flowbite": "2.3.0",
     "flowbite-datepicker": "^1.2.2",
     "flowbite-react": "0.10.1",
@@ -76,7 +76,7 @@
     "lodash": "4.17.21",
     "lucide-react": "^0.477.0",
     "moment": "2.29.4",
-    "next": "^15.1.0",
+    "next": "^14.2.4",
     "next-auth": "^4.24.7",
     "next-client-cookies": "^2.1.0",
     "nextjs-toploader": "^3.7.15",
@@ -93,7 +93,7 @@
     "react-i18next": "^15.0.0",
     "react-otp-input": "^3.1.1",
     "react-slick": "^0.30.2",
-    "react-syntax-highlighter": "^15.5.0",
+    "react-syntax-highlighter": "^16.1.0",
     "react-table": "^7.8.0",
     "rxjs": "^7.8.2",
     "simplebar-react": "3.2.5",
@@ -105,6 +105,9 @@
     "uuid": "^11.0.3",
     "vaul": "^1.1.2",
     "zod": "^3.24.1"
+  },
+  "overrides": {
+    "next": "^14.2.4"
   },
   "devDependencies": {
     "@types/aos": "3.0.7",
